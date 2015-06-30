@@ -11,7 +11,7 @@ var currentHair = 0;
 var currentFace = 0;
 var currentColor = 0;
 
-var colorList = ["#F7E4D3","#8A504E","#4D596A","#71795A","#71472b","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"];
+var colorList = ["#f9f2eb","#8e5956","#4c5f7a","#6e8160","#7d6350","#f6b1b1","#dfc7a9","#83618a","#5a5354","#b3afb0","#d57a80","#97aed3","#84cad2","#b9d3ad","#cbb1a1","#ffdadc","#fde8c0","#c7a3d8","#b17878","#e28d73"];
 //["#F7E4D3","#8A504E","#4D596A","#71795A","#634E3F","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"]
 var loadednum = 0;
 var robinList = [];
@@ -138,7 +138,7 @@ function drawHair(img){
 		ttx.drawImage(img, 0, 0);
 		ttx.fillStyle = colorList[currentColor];
 		ttx.fillRect(0,0,256,256);
-		shift();
+		//shift();
 		ttx.globalCompositeOperation = "destination-atop";
 		ttx.drawImage(img, 0, 0);
 		ttx.globalCompositeOperation = currentFilter;
@@ -152,7 +152,7 @@ function drawHair(img){
 		ttx.drawImage(img, 0, 0);
 		ttx.fillStyle = colorList[currentColor];
 		ttx.fillRect(0,0,256,256);
-		shift();
+		//shift();
 		ttx.globalCompositeOperation = "destination-atop";
 		ttx.drawImage(img, 0, 0);
 		ttx.globalCompositeOperation = "source-over";
