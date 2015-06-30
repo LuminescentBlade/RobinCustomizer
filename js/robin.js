@@ -11,7 +11,8 @@ var currentHair = 0;
 var currentFace = 0;
 var currentColor = 0;
 
-var colorList = ["#F7E4D3","#8A504E","#4D596A","#71795A","#634E3F","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"]
+var colorList = ["#F7E4D3","#8A504E","#4D596A","#71795A","#71472b","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"];
+//["#F7E4D3","#8A504E","#4D596A","#71795A","#634E3F","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"]
 var loadednum = 0;
 var robinList = [];
 
