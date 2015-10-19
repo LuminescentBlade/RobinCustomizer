@@ -129,7 +129,7 @@ function shift(){
 	ttx.fillRect(0,0,256,256);
 	ttx.globalAlpha = 1;
 }
-function drawHair(img){
+/*function drawHair(img){
 	
 	ttx.clearRect(0,0,255,255);
 	if(currentFilter === "hard-light"){	
@@ -156,6 +156,35 @@ function drawHair(img){
 		ttx.globalCompositeOperation = "destination-atop";
 		ttx.drawImage(img, 0, 0);
 		ttx.globalCompositeOperation = "source-over";
+
+		ctx.globalCompositeOperation = "source-over";
+		ctx.drawImage(img, 0, 0);
+		ctx.globalCompositeOperation = "overlay";
+		ctx.drawImage(tintcanvas, 0, 0);
+		ctx.globalCompositeOperation = "source-over";
+	}
+	ttx.globalCompositeOperation = "source-over";
+	ttx.clearRect(0,0,255,255);
+}*/
+
+function drawHair(img){
+	
+	ttx.clearRect(0,0,256,256);
+	if(currentFilter === "hard-light"){	
+		ctx.drawImage(img, 0, 0);
+		ttx.globalCompositeOperation = "source-over";
+		hairfill(img,colorList[currentColor]);
+		ttx.globalCompositeOperation = currentFilter;
+		ttx.drawImage(img, 0, 0);
+
+		ctx.drawImage(tintcanvas, 0, 0);
+	}
+	else if(currentFilter === "overlay"){
+		ctx.drawImage(img, 0, 0);
+		ttx.globalCompositeOperation = "source-over";
+		hairfill(img,colorList[currentColor]);
+		ttx.globalCompositeOperation = "source-over";
+		
 
 		ctx.globalCompositeOperation = "source-over";
 		ctx.drawImage(img, 0, 0);
@@ -267,6 +296,40 @@ function openHelp(){
 	$("#helpinner").animate({top:0},"fast");
 }
 
+function hexToRGBA(hex,alpha) {
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16),
+		a: alpha
+	} : null;
+}
+
+function hairfill(img,color){
+	ttx.clearRect(0,0,256,256);
+	ttx.drawImage(img, 0, 0);
+	var imgdata = ttx.getImageData(0,0,256,256);
+	var col = hexToRGBA(color);
+	var hasColor = function(pos){
+		var r = imgdata.data[pos];
+		var g = imgdata.data[pos+1];
+		var b = imgdata.data[pos+2];
+		var a = imgdata.data[pos+3];
+
+		return (a != 0)
+	}
+	var colorPix = function(pos){
+		imgdata.data[pos] = col.r;
+		imgdata.data[pos+1] = col.g;
+		imgdata.data[pos+2] = col.b;
+	}
+
+	for(var i = 0; i < imgdata.data.length;i+=4){
+		if(hasColor(i)) colorPix(i);
+	}
+	ttx.putImageData(imgdata,0,0);
+}
 
 $(window).load(function(){
 	setupHelp();
