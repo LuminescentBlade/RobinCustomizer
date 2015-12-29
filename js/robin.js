@@ -22,6 +22,7 @@ function setCol(ind){
 	colorpicker.children().eq(currentColor).removeClass("selected");
 	currentColor = ind;
 	changeMenu("color");
+	loadCurrentrobin();	
 }
 function initColorPicker(){
 
