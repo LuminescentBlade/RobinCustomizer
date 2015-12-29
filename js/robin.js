@@ -10,14 +10,29 @@ var currentrobin = 0; //0,1,2M 3,4,5F
 var currentHair = 0;
 var currentFace = 0;
 var currentColor = 0;
-
+var colorpicker;
+var colorpickeropen = false;
 var colorList = ["#f9f2eb","#8e5956","#4c5f7a","#6e8160","#7d6350","#f6b1b1","#dfc7a9","#83618a","#5a5354","#b3afb0","#d57a80","#97aed3","#84cad2","#b9d3ad","#cbb1a1","#ffdadc","#fde8c0","#c7a3d8","#b17878","#e28d73"];
 //["#F7E4D3","#8A504E","#4D596A","#71795A","#634E3F","#E6A197","#D3B692","#815E78","#5B4E49","#A59C95","#CA7A73","#96A2B7","#7EB1AD","#B4C199","#C39F89","#FCD0C2","#F4DBAD","#C497BC","#A26B61","#D57F60"]
 var loadednum = 0;
 var robinList = [];
 
-
 initrobin();
+function setCol(ind){
+	colorpicker.children().eq(currentColor).removeClass("selected");
+	currentColor = ind;
+	changeMenu("color");
+}
+function initColorPicker(){
+
+	colorpicker = $("#colorpicker")
+	for(var i = 0; i < colorList.length; i++){
+		var block = $('<div class="colorblock" onclick="setCol('+i+')"></div>')
+		block.css('background-color',colorList[i]);
+		colorpicker.append(block);
+	}
+	
+}
 
 function initCanvas(){
 	canvas=$("#robincanvas")[0];
@@ -86,6 +101,7 @@ function forward(param){
 		currentHair = (currentHair+1)%numhair;
 	}
 	else if(param === "color"){
+		colorpicker.children().eq(currentColor).removeClass("selected");
 		currentColor = (currentColor+1)%colorList.length;
 	}
 	changeMenu(param);
@@ -106,6 +122,7 @@ function backward(param){
 		currentHair = (currentHair+numhair-1)%numhair;
 	}
 	else if(param === "color"){
+		colorpicker.children().eq(currentColor).removeClass("selected");
 		currentColor = (currentColor+colorList.length-1)%colorList.length;
 	}
 	changeMenu(param);
@@ -167,34 +184,55 @@ function shift(){
 	ttx.clearRect(0,0,255,255);
 }*/
 
+function filter(color){
+	var col = hexToRGBA(color);
+	var calc = function (a, b){
+		var _a = a/255;
+		var _b = b/255;
+		var r = (_a < 0.5)?(2*_a*_b):(1-2*(1-_a)*(1-_b));
+		return Math.round(r*255);
+		
+	}
+	
+	var imgdata = ttx.getImageData(0,0,256,256);
+	var colorPix = function(pos){
+			imgdata.data[pos] = calc(imgdata.data[pos],col.r);
+			imgdata.data[pos+1] = calc(imgdata.data[pos+1],col.g);
+			imgdata.data[pos+2] = calc(imgdata.data[pos+2],col.b);
+	}
+	var hasColor = function(pos){
+		//var r = imgdata.data[pos];
+		//var g = imgdata.data[pos+1];
+		//var b = imgdata.data[pos+2];
+		var a = imgdata.data[pos+3];
+
+		return (a != 0)
+	}
+	
+	for(var i = 0; i < imgdata.data.length;i+=4){
+		if(hasColor(i)) colorPix(i);
+	}
+	ttx.putImageData(imgdata,0,0);
+	
+}
+
+
 function drawHair(img){
 	
 	ttx.clearRect(0,0,256,256);
-	if(currentFilter === "hard-light"){	
-		ctx.drawImage(img, 0, 0);
-		ttx.globalCompositeOperation = "source-over";
-		hairfill(img,colorList[currentColor]);
-		ttx.globalCompositeOperation = currentFilter;
-		ttx.drawImage(img, 0, 0);
-
-		ctx.drawImage(tintcanvas, 0, 0);
-	}
-	else if(currentFilter === "overlay"){
-		ctx.drawImage(img, 0, 0);
-		ttx.globalCompositeOperation = "source-over";
-		hairfill(img,colorList[currentColor]);
-		ttx.globalCompositeOperation = "source-over";
-		
-
-		ctx.globalCompositeOperation = "source-over";
-		ctx.drawImage(img, 0, 0);
-		ctx.globalCompositeOperation = "overlay";
-		ctx.drawImage(tintcanvas, 0, 0);
-		ctx.globalCompositeOperation = "source-over";
-	}
+	ctx.drawImage(img, 0, 0);
+	ttx.globalCompositeOperation = "source-over";
+	ttx.drawImage(img, 0, 0);
+	ctx.globalCompositeOperation = "source-over";
+	ctx.drawImage(img, 0, 0);
+	filter(colorList[currentColor],currentFilter);
+	ctx.drawImage(tintcanvas, 0, 0);
+	ctx.globalCompositeOperation = "source-over";
 	ttx.globalCompositeOperation = "source-over";
 	ttx.clearRect(0,0,255,255);
 }
+
+
 
 function dispload(){
 	var p = Math.floor(100*(loadednum/targetnum));
@@ -258,8 +296,9 @@ function changeMenu(param){
 			$("#features").html("None");
 		}
 	}
-	else if(param === "color"){
+		else if(param === "color"){
 		$("#color").html("Hair Color "+(currentColor+1));
+		colorpicker.children().eq(currentColor).addClass("selected");		
 	}
 }
 
@@ -334,11 +373,24 @@ function hairfill(img,color){
 $(window).load(function(){
 	setupHelp();
 	initCanvas();
+	initColorPicker();
 	setFilterButton();
 	changeMenu("robin");
 	changeMenu("face");
 	changeMenu("hair");
 	changeMenu("color");
-//	initrobin();
+	//initrobin();
 	loadCurrentrobin();	
+});
+
+function toggleHC(){
+	colorpicker.toggleClass("hidden");
+	colorpickeropen = !colorpickeropen;
+}
+
+$(document).click(function(e){
+	if($(e.target).attr("id")!="colorpicker" && $(e.target).attr("id")!="color" && !$(e.target).hasClass("colorblock") && colorpickeropen){
+		colorpicker.addClass('hidden');
+		colorpickeropen = false;
+	}
 });
