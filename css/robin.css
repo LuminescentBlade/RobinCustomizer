@@ -253,6 +253,12 @@ button.helpbutton{
 	font-size:1.1em;
 	border-radius:10px;
 	padding: 0 10px 0 10px;
+	margin: 5px;
+	
+}
+button.helpbutton.smol{
+	height:25px;
+	font-size: 0.8em;
 }
 button.helpbutton:hover{
 	background-color:#94d3dc;
@@ -266,13 +272,24 @@ button.helpbutton.dark{
 	color:#ffffff;
 }
 
+button.helpbutton.dark.on{
+	background-color:#d5733e;
+}
+
+
 button.helpbutton.dark:hover{
 	background-color:#549fc2;
 }
+
 button.helpbutton.dark:active{
-	background-color:#aaeafa;
+	background-color:#5ba4c6;
+	
 }
 
 pre{
 	color: #f6cc8b;
+}
+
+.hidden{
+	display:none;
 }

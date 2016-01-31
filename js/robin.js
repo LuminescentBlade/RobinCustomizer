@@ -371,15 +371,28 @@ function hairfill(img,color){
 	ttx.putImageData(imgdata,0,0);
 }
 
+function random(){
+	currentrobin = Math.floor(Math.random()*6);
+	currentHair = Math.floor(Math.random()*5);
+	currentFace = Math.floor(Math.random()*5);
+	currentColor = Math.floor(Math.random()*colorList.length);
+	changeAllMenu();
+	loadCurrentrobin();	
+}
+
+function changeAllMenu(){
+	changeMenu("robin");
+	changeMenu("face");
+	changeMenu("hair");
+	changeMenu("color");
+}
+
 $(window).load(function(){
 	setupHelp();
 	initCanvas();
 	initColorPicker();
 	setFilterButton();
-	changeMenu("robin");
-	changeMenu("face");
-	changeMenu("hair");
-	changeMenu("color");
+	changeAllMenu();
 	//initrobin();
 	loadCurrentrobin();	
 });
